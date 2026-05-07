@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dados | Estação Meteorológica de PU5BHV</title>
+  <meta name="description" content="Tabela de dados extremos da Estação Meteorológica PU5BHV.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
+  <script src="assets/js/dados.js" defer></script>
+</head>
+<body>
+  <aside class="side-menu" aria-label="Menu principal">
+    <div class="side-menu-brand"><i class="fa-solid fa-cloud-sun-rain"></i><strong>Estação PU5BHV</strong><small>Menu de páginas</small></div>
+    <nav class="side-menu-links">
+      <a href="index.html"><i class="fa-solid fa-house"></i> Início</a>
+      <a href="camera.html"><i class="fa-solid fa-camera"></i> Câmeras</a>
+      <a href="dados.html" class="active"><i class="fa-solid fa-table"></i> Dados</a>
+      <a href="about.html"><i class="fa-solid fa-circle-info"></i> Sobre</a>
+      <a href="face.html"><i class="fa-brands fa-facebook"></i> Compartilhar</a>
+    </nav>
+    <div class="side-menu-note">A tabela procura primeiro o CSV mensal. Se não encontrar, usa o JSON atual.</div>
+  </aside>
+
+  <header class="site-title-banner">
+    <h1>Estação Meteorológica de PU5BHV</h1>
+    <div class="site-owner-name">Moacir José Constantino</div>
+  </header>
+
+  <div class="page-content">
+    <main class="hero">
+      <div class="container">
+        <section class="hero-card">
+          <div class="hero-inner">
+            <div>
+              <span class="eyebrow"><i class="fa-solid fa-table"></i> Dados extremos</span>
+              <h1>Histórico mensal</h1>
+              <p>Tabela HTML compatível com GitHub Pages. Ela carrega <strong>data/ambientweather_mes.csv</strong> quando existir; caso contrário, mostra os dados disponíveis em <strong>data/clima.json</strong>.</p>
+              <div class="hero-meta">
+                <div class="meta-pill"><i class="fa-solid fa-file-csv"></i> CSV mensal opcional</div>
+                <div class="meta-pill"><i class="fa-solid fa-download"></i> Salvar tabela JPG</div>
+              </div>
+            </div>
+            <div class="hero-side">
+              <div class="status-box"><div class="status-label">Fonte</div><div class="status-value">HTML + JS</div><div class="muted">Sem PHP, sem SQLite e pronto para publicação estática.</div></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div><h2>Resumo diário</h2><p id="dadosFonte">Carregando fonte de dados...</p></div>
+          <div class="top-bar"><button class="btn" onclick="salvarTabelaJpg()"><i class="fa-solid fa-image"></i> Salvar tabela JPG</button></div>
+        </div>
+        <div id="areaImagem" class="panel">
+          <h3>Histórico do mês na Estação Meteorológica PU5BHV</h3>
+          <p class="muted">Rodeio SC - Moacir José Constantino</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Temp. máx. °C</th><th>Hora</th><th>Temp. mín. °C</th><th>Hora</th>
+                  <th>Umid. máx. %</th><th>Hora</th><th>Umid. mín. %</th><th>Hora</th>
+                  <th>Vento máx. km/h</th><th>Hora</th><th>Vento mín. km/h</th><th>Hora</th>
+                  <th>Rajada máx. km/h</th><th>Hora</th>
+                  <th>Chuva máx. mm</th><th>Hora</th>
+                </tr>
+              </thead>
+              <tbody id="dadosBody">
+                <tr><td colspan="17">Carregando...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p class="footer-note"><strong>Para histórico completo:</strong> copie o arquivo CSV gerado pelo Raspberry para <code>data/ambientweather_mes.csv</code> antes do envio ao GitHub.</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function salvarTabelaJpg() {
+      const area = document.getElementById('areaImagem');
+      if (!window.html2canvas || !area) return alert('Biblioteca ainda não carregada. Tente novamente em alguns segundos.');
+      html2canvas(area, { backgroundColor: '#08111f', scale: 2, useCORS: true }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'historico_mensal_pu5bhv.jpg';
+        link.href = canvas.toDataURL('image/jpeg', 0.95);
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>

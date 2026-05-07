@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estação Meteorológica | Rodeio SC</title>
+  <meta name="description" content="Painel meteorológico de Rodeio SC com dados locais da Estação PU5BHV.">
+  <meta property="og:title" content="Estação Meteorológica PU5BHV">
+  <meta property="og:description" content="Monitoramento local de temperatura, umidade, vento, chuva e câmera em Rodeio SC.">
+  <meta property="og:image" content="https://rodeiosc.github.io/media/latest.jpg">
+  <meta property="og:url" content="https://rodeiosc.github.io/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body>
+  <aside class="side-menu" aria-label="Menu principal">
+    <div class="side-menu-brand">
+      <i class="fa-solid fa-cloud-sun-rain"></i>
+      <strong>Estação PU5BHV</strong>
+      <small>Menu de páginas</small>
+    </div>
+    <nav class="side-menu-links">
+      <a href="index.html" class="active"><i class="fa-solid fa-house"></i> Início</a>
+      <a href="camera.html"><i class="fa-solid fa-camera"></i> Câmeras</a>
+      <a href="dados.html"><i class="fa-solid fa-table"></i> Dados</a>
+      <a href="about.html"><i class="fa-solid fa-circle-info"></i> Sobre</a>
+      <a href="face.html"><i class="fa-brands fa-facebook"></i> Compartilhar</a>
+    </nav>
+    <div class="side-menu-note">Versão HTML estática pronta para GitHub Pages.</div>
+  </aside>
+
+  <header class="site-title-banner">
+    <h1>Estação Meteorológica de PU5BHV</h1>
+    <div class="site-owner-name">Moacir José Constantino</div>
+  </header>
+
+  <div class="page-content">
+    <main class="hero" id="inicio">
+      <div class="container">
+        <section class="hero-card">
+          <div class="hero-inner">
+            <div>
+              <span class="eyebrow"><i class="fa-solid fa-tower-broadcast"></i> Monitoramento em tempo real</span>
+              <h1>Estação Meteorológica<br>Rodeio SC</h1>
+              <p>Painel meteorológico com dados locais de temperatura, vento, pressão, umidade e chuva, apresentado em interface moderna, responsiva e compatível com publicação no GitHub Pages.</p>
+              <div class="hero-meta">
+                <div class="meta-pill"><i class="fa-regular fa-clock"></i> Atualizado em <span id="updatedAt">carregando...</span></div>
+                <div class="meta-pill"><i class="fa-solid fa-location-dot"></i> Bairro Gávea, Rodeio SC</div>
+                <div class="meta-pill"><i class="fa-solid fa-compass"></i> Vento de <span id="windDirMeta">-</span></div>
+              </div>
+              <div id="dataWarning" class="api-warning meta-pill" hidden></div>
+            </div>
+            <div class="hero-side">
+              <div class="status-box">
+                <div class="status-label">Condição atual</div>
+                <div id="statusText" class="status-value status-ok">Carregando</div>
+                <div id="statusDescription" class="muted">Aguardando leitura do arquivo data/clima.json.</div>
+              </div>
+              <div class="disclaimer-box">
+                <div class="status-label">Aviso</div>
+                <div class="muted">Este painel apresenta medições locais de caráter observacional e informativo. As condições podem variar conforme relevo, altitude, urbanização e microclima.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <section class="section" id="indicadores">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Indicadores principais</h2>
+            <p>Leitura instantânea dos parâmetros mais relevantes da estação.</p>
+          </div>
+        </div>
+        <div class="metrics-grid">
+          <article class="metric-card"><div class="icon"><i class="fa-solid fa-temperature-half"></i></div><div class="metric-label">Temperatura</div><div id="tempValue" class="metric-value">-</div><div class="metric-sub">Leitura atual</div></article>
+          <article class="metric-card"><div class="icon"><i class="fa-solid fa-droplet"></i></div><div class="metric-label">Umidade</div><div id="humValue" class="metric-value">-</div><div class="metric-sub">Umidade relativa</div></article>
+          <article class="metric-card"><div class="icon"><i class="fa-solid fa-wind"></i></div><div class="metric-label">Vento</div><div id="windValue" class="metric-value">-</div><div class="metric-sub">Velocidade média</div></article>
+          <article class="metric-card"><div class="icon"><i class="fa-solid fa-cloud-rain"></i></div><div class="metric-label">Chuva</div><div id="rainValue" class="metric-value">-</div><div class="metric-sub">Acumulado do dia</div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="resumo">
+      <div class="container">
+        <div class="two-grid">
+          <article class="panel chart-wrap">
+            <h3>Evolução das últimas leituras</h3>
+            <canvas id="weatherChart"></canvas>
+          </article>
+          <article class="panel">
+            <h3>Resumo operacional</h3>
+            <div class="summary-list">
+              <div class="summary-item"><span>Última atualização</span><strong id="updatedAtCard">-</strong></div>
+              <div class="summary-item"><span>Pressão atmosférica</span><strong id="pressureValue">-</strong></div>
+              <div class="summary-item"><span>Rajada</span><strong id="gustValue">-</strong></div>
+              <div class="summary-item"><span>Índice UV</span><strong id="uvValue">-</strong></div>
+              <div class="summary-item"><span>Radiação solar</span><strong id="solarValue">-</strong></div>
+              <div class="summary-item"><span>Direção do vento</span><strong id="dirValue">-</strong></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="monitoramento">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Monitoramento visual</h2>
+            <p>Camadas meteorológicas externas para radar, vento e nebulosidade.</p>
+          </div>
+        </div>
+        <div class="map-grid">
+          <article class="panel map-card"><div class="map-head"><h3>Radar</h3><p>Precipitação e instabilidade regional.</p></div><iframe src="https://embed.windy.com/embed2.html?lat=-26.5455&lon=-49.2100&zoom=9&overlay=radar&animate=true" loading="lazy"></iframe></article>
+          <article class="panel map-card"><div class="map-head"><h3>Vento</h3><p>Fluxo de vento em superfície.</p></div><iframe src="https://embed.windy.com/embed2.html?lat=-26.5455&lon=-49.2100&zoom=9&overlay=wind&animate=true" loading="lazy"></iframe></article>
+          <article class="panel map-card"><div class="map-head"><h3>Satélite</h3><p>Cobertura de nuvens e evolução visual.</p></div><iframe src="https://embed.windy.com/embed2.html?lat=-26.5455&lon=-49.2100&zoom=9&overlay=clouds&animate=true" loading="lazy"></iframe></article>
+        </div>
+        <p class="footer-note"><strong>Nota importante:</strong> as informações publicadas têm caráter amador, observacional e informativo.</p>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

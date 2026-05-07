@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compartilhar | Estação Meteorológica PU5BHV</title>
+  <meta name="description" content="Compartilhar painel diário da Estação Meteorológica PU5BHV.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Estação Meteorológica PU5BHV">
+  <meta property="og:description" content="Estação Meteorológica de Rodeio SC - Dados extremos do dia anterior.">
+  <meta property="og:url" content="https://rodeiosc.github.io/face.html">
+  <meta property="og:image" content="https://rodeiosc.github.io/media/ontem.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <main class="share-card">
+    <span class="eyebrow"><i class="fa-brands fa-facebook"></i> Compartilhamento</span>
+    <h1>Estação Meteorológica PU5BHV</h1>
+    <p class="muted">Ao clicar em compartilhar, o texto abaixo será copiado e o Facebook será aberto.</p>
+
+    <div class="media-frame" style="margin: 18px 0; aspect-ratio: 16 / 9;">
+      <img id="sharePreview" src="media/ontem.jpg" alt="Painel diário da estação meteorológica" onerror="this.src='assets/img/placeholder-camera.svg'">
+    </div>
+
+    <textarea id="shareText" readonly>Estação Meteorológica de Rodeio SC
+DADOS EXTREMOS DIA ANTERIOR
+Curta e compartilhe.
+https://rodeiosc.github.io/face.html</textarea>
+
+    <div class="paste-help">Aperte Control+V para colar o texto no Facebook</div>
+
+    <div class="action-row">
+      <a class="btn btn-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Frodeiosc.github.io%2Fface.html" id="facebookShareBtn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i> Compartilhar no Facebook</a>
+      <a class="btn btn-secondary" href="index.html"><i class="fa-solid fa-house"></i> Voltar para o site</a>
+    </div>
+
+    <p class="footer-note" id="copyStatus">Clique em Compartilhar no Facebook. O texto será copiado para a área de transferência.</p>
+  </main>
+
+  <script>
+    const shareText = document.getElementById('shareText').value;
+    const facebookUrl = 'https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Frodeiosc.github.io%2Fface.html';
+
+    function copyOldMode(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(textarea);
+      return ok;
+    }
+
+    async function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+      return copyOldMode(text);
+    }
+
+    document.getElementById('facebookShareBtn').addEventListener('click', async function(event) {
+      event.preventDefault();
+      const status = document.getElementById('copyStatus');
+      try {
+        await copyText(shareText);
+        status.textContent = 'Texto copiado. Aperte Control+V no campo do Facebook.';
+      } catch (e) {
+        status.textContent = 'Não foi possível copiar automaticamente. Selecione o texto e copie manualmente.';
+      }
+      window.open(facebookUrl, '_blank', 'noopener,noreferrer');
+    });
+  </script>
+</body>
+</html>
